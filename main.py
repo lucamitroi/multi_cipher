@@ -25,7 +25,7 @@ if __name__ == "__main__":
             if value2 == '1':
                 print()
                 text = input("Enter the text that you want to encrypt: ")
-                print("\nThe encrypted value is: ")
+                print("\nThe encrypted text is: ")
                 sliced_list = slice_string(text)
                 for list_element in sliced_list:
                     plaintext = bytearray(list_element.encode())
