@@ -1,4 +1,5 @@
-from aes import *
+from aes import aes_encryption, aes_decryption
+from diffie_hellman import diffie_hellman
 import os
 import secrets
 import base64
@@ -14,6 +15,7 @@ if __name__ == "__main__":
     while run:
         print("Which algorithm do you want to use?")
         print("1. Advanced Encryption Standard")
+        print("3. Diffie-Hellman")
         print("0. Exit\n")
 
         value = input("Please enter a number: ")
@@ -39,6 +41,10 @@ if __name__ == "__main__":
                     ciphertext = aes_encryption(plaintext, key)
                     encoded_bytes = base64.b64encode(ciphertext)
                     encrypted_text = encrypted_text + str(encoded_bytes)[2:-1]
+
+                message_bytes = encrypted_text.encode('ascii')
+                base64_bytes = base64.b64encode(message_bytes)
+                encrypted_text = base64_bytes.decode('ascii')
                 print("\nThe encrypted text is: \033[93m" + encrypted_text + "\n\033[00m")
 
                 encoded_key = base64.b64encode(key)
@@ -49,6 +55,9 @@ if __name__ == "__main__":
                 print()
                 decrypted_text = ''
                 text = input("Enter the text that you want to decrypt: ")
+                base64_bytes = text.encode('ascii')
+                message_bytes = base64.b64decode(base64_bytes)
+                text = message_bytes.decode('ascii')
                 key_path = input("Provide the path to the key: ")
                 if not os.path.isfile(key_path):
                     print(f"File '{key_path}' not found\n")
@@ -67,6 +76,7 @@ if __name__ == "__main__":
 
             else:
                 print("Not a valid option")
-
+        elif value == '3':
+            diffie_hellman()
         elif value == '0':
             run = False

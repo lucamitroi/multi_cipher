@@ -241,15 +241,3 @@ def aes_decryption(cipher: bytes, key: bytes) -> bytes:
 
     plain = bytes_from_state(state)
     return plain
-
-
-# if __name__ == "__main__":
-#     s = "exemplu"
-#     plaintext = bytearray(s.encode())
-#     if len(plaintext) % 16 != 0:
-#         plaintext.extend(b'\0' * (16 - len(plaintext) % 16))
-#     key = bytearray.fromhex('000102030405060708090a0b0c0d0e0f')
-#     ciphertext = aes_encryption(plaintext, key)
-#     recovered_plaintext = aes_decryption(ciphertext, key)
-#     print(type(ciphertext))
-#     print(recovered_plaintext)
