@@ -3,6 +3,8 @@ from diffie_hellman import diffie_hellman
 import os
 import secrets
 import base64
+from random_word import RandomWords
+from rc4 import *
 
 
 def slice_string(s: str, number: int):
@@ -13,15 +15,16 @@ if __name__ == "__main__":
     run = True
 
     while run:
-        print("Which algorithm do you want to use?")
+        print("\033[34mWhich algorithm do you want to use?\n\033[00m")
         print("1. Advanced Encryption Standard")
+        print("2. Rivest Cipher 4")
         print("3. Diffie-Hellman")
         print("0. Exit\n")
 
         value = input("Please enter a number: ")
         print()
         if value == '1':
-            print("What do you want to do?")
+            print("\033[34mWhat do you want to do?\033[00m")
             print("1. Encrypt")
             print("2. Decrypt\n")
 
@@ -29,10 +32,10 @@ if __name__ == "__main__":
             if value2 == '1':
                 print()
                 encrypted_text = ''
+                text = input("Enter the text that you want to encrypt: ")
                 key_name = input("Enter the name of the key: ")
                 key_path = "./keys/" + key_name + ".bin"
                 key = secrets.token_bytes(16)
-                text = input("Enter the text that you want to encrypt: ")
                 sliced_list = slice_string(text, 16)
                 for list_element in sliced_list:
                     plaintext = bytearray(list_element.encode())
@@ -76,6 +79,42 @@ if __name__ == "__main__":
 
             else:
                 print("Not a valid option")
+        elif value == '2':
+            print("\033[34mWhat do you want to do?\033[00m")
+            print("1. Encrypt")
+            print("2. Decrypt\n")
+
+            value2 = input("Please enter a number: ")
+            if value2 == '1':
+                print()
+                text = input("Enter the text that you want to encrypt: ")
+                key_name = input("Enter the name of the key: ")
+                key_path = "./keys/" + key_name + ".bin"
+                r = RandomWords()
+                key = generate_key(r.get_random_word())
+                ks = key_scheduling(key)
+                final_key = generation_algorithm(ks, text)
+                print(final_key)
+                with open(key_path, 'w') as f:
+                    f.write(str(final_key)[1:-1])
+                encrypted_text = rc4_encrypt(text, final_key)
+                print("\nThe encrypted text is: \033[93m" + str(encrypted_text) + "\n\033[00m")
+            elif value2 == '2':
+                print()
+                text = input("Enter the text that you want to decrypt: ")
+                text = text.split(',')
+                text = [int(s) for s in text]
+                key_path = input("Provide the path to the key: ")
+                if not os.path.isfile(key_path):
+                    print(f"File '{key_path}' not found\n")
+                else:
+                    with open(key_path, 'r') as file:
+                        key = file.read()
+                    key = key.split(',')
+                    key = [int(s) for s in key]
+                    decrypted_text = rc4_decrypt(text, key)
+                    print("The decrypted text is: \033[93m" + decrypted_text + "\n\033[00m")
+
         elif value == '3':
             diffie_hellman()
         elif value == '0':
